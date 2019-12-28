@@ -1,0 +1,10 @@
+---
+gcp_project: ansible-cc
+gcp_cred_kind: serviceaccount
+gcp_cred_file: /home/lillo/.gcp/service-ansible-cc-779981b6ad61.json
+
+zone: us-central1-a
+region: us-central1
+instance_name: vm-test
+machine_type: f1-micro
+size_gb: 50
