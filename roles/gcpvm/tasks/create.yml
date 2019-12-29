@@ -11,16 +11,6 @@
     state: present
   register: disk
 
-# - name: create a address
-#   gcp_compute_address:
-#       name: "{{ instance_name }}"
-#       region: "{{ region }}"
-#       project: "{{ gcp_project }}"
-#       auth_kind: "{{ gcp_cred_kind }}"
-#       service_account_file: "{{ gcp_cred_file }}"
-#       state: present
-#   register: address
-
 - name: create an instance
   gcp_compute_instance:
     name: "{{ instance_name }}"
@@ -36,7 +26,6 @@
         selfLink: 'projects/ansible-cc/regions/us-central1/subnetworks/default'
       access_configs:
         - name: 'External NAT'
-          # nat_ip: "{{ address }}"
           type: 'ONE_TO_ONE_NAT'
     zone: "{{ zone }}"
     project: "{{ gcp_project }}"

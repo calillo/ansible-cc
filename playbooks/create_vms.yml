@@ -1,0 +1,11 @@
+---
+- name: Provisioning GCP VMs
+  hosts: localhost
+  gather_facts: no
+  connection: local
+
+  roles:
+  - role: gcpvm
+    instance_name: vm-docker-manager-1
+  - role: gcpvm
+    instance_name: vm-docker-worker-1
