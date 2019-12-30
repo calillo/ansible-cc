@@ -1,0 +1,9 @@
+---
+- name: Secure Docker Swarm - local
+  hosts: localhost
+  gather_facts: no
+  connection: local
+
+  roles:
+    - role: secure-docker
+      tag: ca-client

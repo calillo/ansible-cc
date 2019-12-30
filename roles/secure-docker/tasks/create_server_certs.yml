@@ -1,0 +1,28 @@
+---
+- name: Generate server key
+  command: "openssl genrsa -out {{ pki_path }}/{{ inventory_hostname }}-key.pem 2048"
+  args:
+    creates: "{{ pki_path }}/{{ inventory_hostname }}-key.pem"
+  become: no
+  delegate_to: localhost
+
+- name: Create server cnf
+  template:
+    src: ../templates/server.cnf.j2
+    dest: "{{ pki_path }}/{{ inventory_hostname }}.cnf"
+  become: no
+  delegate_to: localhost
+
+- name: Generate server csr 
+  command: "openssl req -new -key {{ pki_path }}/{{ inventory_hostname }}-key.pem -out {{ pki_path }}/{{ inventory_hostname }}-cert.csr -subj '/CN=docker-server' -config {{ pki_path }}/{{ inventory_hostname }}.cnf"
+  args:
+    creates: "{{ pki_path }}/{{ inventory_hostname }}-cert.csr"  
+  become: no
+  delegate_to: localhost
+
+- name: Generate server certificate 
+  command: "openssl x509 -req -in {{ pki_path }}/{{ inventory_hostname }}-cert.csr -CA {{ pki_path }}/ca.pem -CAkey {{ pki_path }}/ca-key.pem -CAcreateserial -out {{ pki_path }}/{{ inventory_hostname }}-cert.pem -days 365 -extensions v3_req -extfile {{ pki_path }}/{{ inventory_hostname }}.cnf"
+  args:
+    creates: "{{ pki_path }}/{{ inventory_hostname }}-cert.pem" 
+  become: no
+  delegate_to: localhost

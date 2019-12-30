@@ -1,0 +1,12 @@
+---
+- import_tasks: create_ca_client_certs.yml
+  tags:
+    - ca-client
+
+- import_tasks: create_server_certs.yml
+  tags:
+    - server
+
+- import_tasks: install_certs.yml
+  tags:
+    - install

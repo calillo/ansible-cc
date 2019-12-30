@@ -1,3 +1,4 @@
 ---
 
 - import_playbook: playbooks/create_vms.yml
+  tags: create

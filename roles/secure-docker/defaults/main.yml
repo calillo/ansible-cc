@@ -1,0 +1,4 @@
+---
+pki_path: ~/github/ansible-cc/pki
+docker_client_certs_path: ~/.docker
+docker_server_certs_path: /etc/docker/ssl
