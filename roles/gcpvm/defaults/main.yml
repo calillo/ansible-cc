@@ -1,10 +1,10 @@
 ---
-gcp_project: ansible-cc
+gcp_project: project-name
 gcp_cred_kind: serviceaccount
-gcp_cred_file: ~/.gcp/service-ansible-cc-779981b6ad61.json
+gcp_cred_file: ~/.gcp/serviceaccount.json
 
 zone: us-central1-a
 region: us-central1
-instance_name: vm-test
+instance_name: vm-name
 machine_type: f1-micro
-size_gb: 50
+size_gb: 10
