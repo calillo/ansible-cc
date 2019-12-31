@@ -5,3 +5,6 @@
 
   roles:
     - role: atosatto.docker-swarm
+      tags: 
+        - create
+        - configure

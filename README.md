@@ -59,4 +59,5 @@ export DOCKER_CERT_PATH=~/github/ansible-cc/pki/client
 
 ## TODO
 - loop vm creation
+- provisiong with terraform
 - copy ansible ssh pub key

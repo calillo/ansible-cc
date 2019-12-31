@@ -1,0 +1,3 @@
+---
+- import_tasks: create_server_certs.yml
+- import_tasks: install_certs.yml

@@ -1,7 +1,0 @@
----
-- name: Secure Docker Swarm - remote
-  hosts: all
-  become: yes
-
-  roles:
-    - role: secure-docker
