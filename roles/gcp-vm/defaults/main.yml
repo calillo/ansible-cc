@@ -6,5 +6,7 @@ gcp_cred_file: ~/.gcp/serviceaccount.json
 zone: us-central1-a
 region: us-central1
 instance_name: vm-name
+tags_list:
+ - default
 machine_type: f1-micro
 size_gb: 10

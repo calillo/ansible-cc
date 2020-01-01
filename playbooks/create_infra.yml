@@ -1,0 +1,29 @@
+---
+- name: Provisioning GCP VMs
+  hosts: localhost
+  gather_facts: no
+  connection: local
+
+  roles:
+    - role: gcp-fw
+
+  tasks:
+    - name: Swarm manager instances
+      include_role:
+        name: gcp-vm
+      vars:
+        instance_name: "vm-docker-manager-{{ item }}"
+      with_sequence: start=1 end={{ num_manager }}
+      tags:
+        - create
+        - delete
+
+    - name: Swarm worker instances
+      include_role:
+        name: gcp-vm
+      vars:
+        instance_name: "vm-docker-worker-{{ item }}"
+      with_sequence: start=1 end={{ num_worker }}
+      tags:
+        - create
+        - delete

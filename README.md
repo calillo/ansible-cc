@@ -8,13 +8,13 @@ ssh-keygen -t rsa -b 4096 -C "ansible" -f ~/.ssh/ansible
 
 ## ansible
 
-ansible-playbook -t create playbooks/create_vms.yml
-ansible-playbook -i inventories/inventory_gcp.yml playbooks/install_docker_swarm.yml
-ansible-playbook -t ca-client playbooks/secure_docker_swarm_local.yml
-ansible-playbook -i inventories/inventory_gcp.yml -t server playbooks/secure_docker_swarm_remote.yml
-ansible-playbook -i inventories/inventory_gcp.yml -t install playbooks/secure_docker_swarm_remote.yml
+ansible-playbook -i inventories/dev playbooks/create_infra.yml -t create
+ansible-playbook -i inventories/dev playbooks/install_docker_swarm.yml -t create
+ansible-playbook -i inventories/dev playbooks/secure_docker_swarm.yml -t create
 
-ansible-playbook -t delete playbooks/create_vms.yml
+ansible-playbook -i inventories/dev site.yml -t create
+ansible-playbook -i inventories/dev site.yml -t configure
+ansible-playbook -i inventories/dev site.yml -t delete
 
 ## inventory
 
@@ -58,6 +58,5 @@ export DOCKER_TLS_VERIFY=1
 export DOCKER_CERT_PATH=~/github/ansible-cc/pki/client
 
 ## TODO
-- loop vm creation
 - provisiong with terraform
-- copy ansible ssh pub key
+- set ansible ssh pub key on provisioning

@@ -1,0 +1,4 @@
+---
+gcp_project: project-name
+gcp_cred_kind: serviceaccount
+gcp_cred_file: ~/.gcp/serviceaccount.json

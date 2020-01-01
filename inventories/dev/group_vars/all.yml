@@ -1,12 +1,14 @@
 ---
-# gcpvm
+# gcp
 gcp_project: ansible-cc
 gcp_cred_kind: serviceaccount
 gcp_cred_file: ~/.gcp/service-ansible-cc-779981b6ad61.json
 
+# gcp-vm
+num_manager: 2
+num_worker: 2
 zone: us-central1-a
 region: us-central1
-instance_name: vm-test
 machine_type: f1-micro
 size_gb: 50
 

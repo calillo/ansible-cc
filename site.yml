@@ -1,4 +1,4 @@
 ---
-- import_playbook: playbooks/create_vms.yml
+- import_playbook: playbooks/create_infra.yml
 - import_playbook: playbooks/install_docker_swarm.yml
 - import_playbook: playbooks/secure_docker_swarm.yml
