@@ -1,4 +1,7 @@
 ---
+- src: aeriscloud.disk
+  version: v2.6.0
+
 - name: atosatto.docker-swarm
   src: https://github.com/atosatto/ansible-dockerswarm
   version: origin/master

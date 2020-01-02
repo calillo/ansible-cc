@@ -60,3 +60,4 @@ export DOCKER_CERT_PATH=~/github/ansible-cc/pki/client
 ## TODO
 - provisiong with terraform
 - set ansible ssh pub key on provisioning
+- wait inventory  
