@@ -1,5 +1,6 @@
 {
     "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"],
+    "tls": true,
     "tlscacert": "{{ docker_server_certs_path }}/ca.pem",
     "tlscert": "{{ docker_server_certs_path }}/cert.pem",
     "tlskey": "{{ docker_server_certs_path }}/key.pem",
