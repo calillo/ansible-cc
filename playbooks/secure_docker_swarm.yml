@@ -6,7 +6,7 @@
 
   roles:
     - role: secure-docker-local
-      tags: 
+      tags:
         - create
         - configure
 
@@ -16,6 +16,6 @@
 
   roles:
     - role: secure-docker-remote
-      tags: 
+      tags:
         - create
         - configure

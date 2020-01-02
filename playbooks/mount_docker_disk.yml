@@ -5,6 +5,6 @@
 
   roles:
     - role: aeriscloud.disk
-      tags: 
+      tags:
         - create
         - configure
