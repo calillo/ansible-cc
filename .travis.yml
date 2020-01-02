@@ -3,4 +3,4 @@ install:
   - pip install ansible-lint
 script:
   - ansible-lint --version
-  - ansible-lint site.yml
+  - ansible-lint .
