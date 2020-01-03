@@ -27,3 +27,9 @@
       tags:
         - create
         - delete
+
+    - name: Refresh inventory
+      meta: refresh_inventory
+      tags:
+        - create
+        - delete
