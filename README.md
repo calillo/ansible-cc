@@ -18,11 +18,9 @@ ansible-playbook -i inventories/dev site.yml -t delete
 
 ## inventory
 
-ansible-inventory --graph -i inventories/vm_gcp.yml
-
-ansible-inventory --list -i inventories/vm_gcp.yml --yaml
-
-ansible -i inventory all -m ping
+ansible-inventory -i inventories/dev --graph
+ansible-inventory -i inventories/dev --list --yaml
+ansible -i inventories/dev all -m ping
 
 # galaxy
 
@@ -57,7 +55,12 @@ export DOCKER_HOST=tcp://34.70.109.143:2376
 export DOCKER_TLS_VERIFY=1
 export DOCKER_CERT_PATH=~/github/ansible-cc/pki/client
 
+## Docker Swarm
+
+docker stack deploy --compose-file docker-compose.yml app1
+docker service ls
+docker stack ps app1
+
 ## TODO
 - provisiong with terraform
 - set ansible ssh pub key on provisioning
-- wait inventory  

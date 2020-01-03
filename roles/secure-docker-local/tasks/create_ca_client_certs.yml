@@ -3,15 +3,16 @@
   command: "openssl genrsa -out {{ pki_path }}/ca-key.pem 4096"
   args:
     creates: "{{ pki_path }}/ca-key.pem"
-  
-- name: Generate ca certificate   
-  command: "openssl req -x509 -new -nodes -key {{ pki_path }}/ca-key.pem -days 10000 -out {{ pki_path }}/ca.pem -subj '/CN=Docker CA'"
+
+- name: Generate ca certificate
+  command: "openssl req -x509 -new -nodes -key {{ pki_path }}/ca-key.pem -days 10000
+                        -out {{ pki_path }}/ca.pem -subj '/CN=Docker CA'"
   args:
     creates: "{{ pki_path }}/ca.pem"
 
 - name: Copy client.cnf
   copy:
-    src: ../files/client.cnf
+    src: client.cnf
     dest: "{{ pki_path }}/client.cnf"
 
 - name: Generate client key
@@ -19,13 +20,16 @@
   args:
     creates: "{{ pki_path }}/client-key.pem"
 
-- name: Generate client csr 
-  command: "openssl req -new -key {{ pki_path }}/client-key.pem -out {{ pki_path }}/client-cert.csr -subj '/CN=docker-client' -config {{ pki_path }}/client.cnf"
+- name: Generate client csr
+  command: "openssl req -new -key {{ pki_path }}/client-key.pem -out {{ pki_path }}/client-cert.csr
+                        -subj '/CN=docker-client' -config {{ pki_path }}/client.cnf"
   args:
     creates: "{{ pki_path }}/client-cert.csr"
 
-- name: Generate client certificate 
-  command: "openssl x509 -req -in {{ pki_path }}/client-cert.csr -CA {{ pki_path }}/ca.pem -CAkey {{ pki_path }}/ca-key.pem -CAcreateserial -out {{ pki_path }}/client-cert.pem -days 365 -extensions v3_req -extfile {{ pki_path }}/client.cnf"
+- name: Generate client certificate
+  command: "openssl x509 -req -in {{ pki_path }}/client-cert.csr -out {{ pki_path }}/client-cert.pem
+                         -CA {{ pki_path }}/ca.pem -CAkey {{ pki_path }}/ca-key.pem -CAcreateserial
+                         -days 365 -extensions v3_req -extfile {{ pki_path }}/client.cnf"
   args:
     creates: "{{ pki_path }}/client-cert.pem"
 

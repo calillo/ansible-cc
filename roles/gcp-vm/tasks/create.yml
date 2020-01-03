@@ -32,9 +32,9 @@
     - auto_delete: true
       source: "{{ disk_docker }}"
     network_interfaces:
-    - network: 
+    - network:
         selfLink: 'projects/ansible-cc/global/networks/default'
-      subnetwork: 
+      subnetwork:
         selfLink: 'projects/ansible-cc/regions/us-central1/subnetworks/default'
       access_configs:
         - name: 'External NAT'
