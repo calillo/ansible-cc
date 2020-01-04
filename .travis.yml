@@ -15,3 +15,5 @@ script:
   - ansible-lint roles/*
   - cd roles/secure-docker-ca-client
   - molecule test --all --destroy always
+  - cd ../secure-docker-server
+  - molecule test --all --destroy always
