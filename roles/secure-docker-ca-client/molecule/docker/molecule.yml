@@ -33,6 +33,5 @@ verifier:
   directory: ../resources/tests
   options:
     v: true
-    s: true
   lint:
     name: flake8

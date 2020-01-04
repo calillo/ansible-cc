@@ -1,0 +1,29 @@
+---
+- name: Install openssl
+  hosts: all
+  tasks:
+    - name: Make sure openssl is available on Debian/Ubuntu.
+      package:
+        name: openssl
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Make sure openssl is available on RedHat/CentOS.
+      package:
+        name: openssl
+        state: present
+      when: ansible_os_family == 'RedHat'
+
+- name: Install Docker Swarm
+  hosts: all
+
+  roles:
+    - role: atosatto.docker-swarm
+
+- name: Secure Docker CA Client
+  hosts: localhost
+  gather_facts: no
+  connection: local
+
+  roles:
+    - role: secure-docker-ca-client

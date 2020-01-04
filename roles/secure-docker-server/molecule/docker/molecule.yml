@@ -1,0 +1,67 @@
+---
+scenario:
+  name: docker
+  test_sequence:
+    - lint
+    - cleanup
+    - destroy
+    - dependency
+    - syntax
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - verify
+    - cleanup
+    - destroy
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  - name: manager
+    image: centos:7
+    privileged: true
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - docker_engine
+      - docker_swarm_manager
+  - name: worker
+    image: centos:7
+    privileged: true
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - docker_engine
+      - docker_swarm_worker
+provisioner:
+  name: ansible
+  playbooks:
+    cleanup: ../resources/cleanup.yml
+    prepare: ../resources/prepare.yml
+    converge: ../resources/playbook.yml
+  inventory:
+    group_vars:
+      all:
+        pki_path: pki
+        docker_server_certs_path: /root/.docker
+  lint:
+    name: ansible-lint
+verifier:
+  name: testinfra
+  directory: ../resources/tests
+  options:
+    v: true
+  lint:
+    name: flake8

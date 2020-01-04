@@ -61,6 +61,17 @@ docker stack deploy --compose-file docker-compose.yml app1
 docker service ls
 docker stack ps app1
 
+## Molecule
+
+pytest -v molecule/default/tests/test_default.py --hosts='ansible://localhost'
+
+    # image: fiercely/centos7:systemd
+    # privileged: true
+    # pre_build_image: true
+    # volume_mounts:
+    #   - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+    # command: "/usr/sbin/init"
+
 ## TODO
 - provisiong with terraform
 - set ansible ssh pub key on provisioning
