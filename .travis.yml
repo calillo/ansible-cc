@@ -1,11 +1,17 @@
 language: python
+python:
+  - 3.6
 sudo: required
 
 services:
   - docker
 
 install:
-  - pip install tox-travis
+  - pip install -r test-requirements.txt
 
 script:
-  - tox
+  - ansible-lint --version
+  - ansible-lint site.yml
+  - ansible-lint roles/*
+  - cd roles/secure-docker-ca-client
+  - molecule test --all --destroy always
