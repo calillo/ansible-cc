@@ -1,4 +1,9 @@
 ---
+- name: Check pki path exists
+  file:
+    path: "{{ pki_path }}"
+    state: directory
+
 - name: Generate ca key
   command: "openssl genrsa -out {{ pki_path }}/ca-key.pem 4096"
   args:
@@ -39,7 +44,7 @@
     state: directory
     mode: 0700
 
-- name: Copy server certs
+- name: Copy client certs
   with_items:
     - f: "{{ pki_path }}/ca.pem"
       t: ca.pem
@@ -52,3 +57,4 @@
     src: "{{ item.f }}"
     dest: "{{ docker_client_certs_path }}/{{ item.t }}"
     mode: "{{ item.m | default('0600') }}"
+    remote_src: yes

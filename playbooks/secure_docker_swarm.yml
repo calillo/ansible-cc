@@ -5,7 +5,7 @@
   connection: local
 
   roles:
-    - role: secure-docker-local
+    - role: secure-docker-ca-client
       tags:
         - create
         - configure
@@ -15,7 +15,7 @@
   become: yes
 
   roles:
-    - role: secure-docker-remote
+    - role: secure-docker-server
       tags:
         - create
         - configure
