@@ -1,3 +1,5 @@
+**/*.pyc
+**/*__pycache__
 pki/*
 roles/aeriscloud.disk
 roles/atosatto.docker-swarm
