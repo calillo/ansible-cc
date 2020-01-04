@@ -1,9 +1,14 @@
 language: python
 python:
     - 3.6
+
+sudo: required
+
+services:
+  - docker
+
 install:
-  - pip install ansible-lint
+  - pip install tox-travis
+
 script:
-  - ansible-lint --version
-  - ansible-lint site.yml
-  - ansible-lint roles/*
+  - tox
