@@ -1,5 +1,7 @@
 ansible-cc
 
+[![Build Status](https://travis-ci.com/calillo/ansible-cc?branch=master)](https://travis-ci.com/calillo/ansible-cc)
+
 ## install
 
 sudo pip install ansible requests google-auth
