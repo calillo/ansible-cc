@@ -7,6 +7,7 @@ services:
   - docker
 
 install:
+  - pip install -r ansible-requirements.txt
   - pip install -r test-requirements.txt
 
 script:
