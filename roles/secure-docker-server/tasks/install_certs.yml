@@ -1,0 +1,43 @@
+---
+- name: Check that the server cert path exists
+  file:
+    path: "{{ docker_server_certs_path }}"
+    state: directory
+    mode: 0700
+
+- name: Copy server certs
+  with_items:
+    - f: "{{ pki_path }}/ca.pem"
+      t: ca.pem
+    - f: "{{ pki_path }}/{{ inventory_hostname }}-cert.pem"
+      t: cert.pem
+    - f: "{{ pki_path }}/{{ inventory_hostname }}-key.pem"
+      t: key.pem
+      m: "0400"
+  copy:
+    src: "{{ item.f }}"
+    dest: "{{ docker_server_certs_path }}/{{ item.t }}"
+    mode: "{{ item.m | default('0600') }}"
+  notify: Restart docker
+
+- name: Ensure docker systemd drop-in directory exists
+  file:
+    path: '/etc/systemd/system/docker.service.d'
+    state: directory
+
+- name: Create Docker systemd drop-in file
+  template:
+    src: 'docker-systemd-service.j2'
+    dest: '/etc/systemd/system/docker.service.d/override.conf'
+  notify:
+    - Reload systemd
+    - Restart docker
+
+- name: Copy daemon.json
+  template:
+    src: daemon.json.j2
+    dest: "/etc/docker/daemon.json"
+    owner: root
+    group: root
+    mode: 0600
+  notify: Restart docker

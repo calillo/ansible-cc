@@ -1,0 +1,29 @@
+---
+# gcp
+gcp_project: ansible-cc
+gcp_cred_kind: serviceaccount
+gcp_cred_file: ~/.gcp/service-ansible-cc-779981b6ad61.json
+
+# gcp-vm
+num_manager: 1
+num_worker: 1
+zone: us-central1-a
+region: us-central1
+machine_type: f1-micro
+size_gb: 40
+
+# aeriscloud.disk
+disk_discover_aws_nvme_ebs: false
+disk_additional_disks:
+ - disk: /dev/sdb
+   fstype: xfs
+   mount_options: defaults,noatime
+   mount: /var/lib/docker
+   disable_periodic_fsck: false
+additional_fs_utils:
+  - xfsprogs
+
+# secure-docker
+pki_path: ~/github/ansible-cc/pki
+docker_client_certs_path: ~/.docker
+docker_server_certs_path: /etc/docker/ssl

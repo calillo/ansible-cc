@@ -1,0 +1,22 @@
+language: python
+python:
+  - 3.6
+sudo: required
+
+services:
+  - docker
+
+install:
+  - pip install -r test-requirements.txt
+
+script:
+  # ansible lint playbooks and roles
+  - ansible-lint --version
+  - ansible-lint site.yml
+  - ansible-lint roles/*
+  # test secure-docker-ca-client
+  - cd roles/secure-docker-ca-client
+  - molecule test --all --destroy always
+  # test secure-docker-server
+  - cd ../secure-docker-server
+  - molecule test --all --destroy always

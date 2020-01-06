@@ -1,0 +1,3 @@
+---
+pki_path: ~/pki
+docker_client_certs_path: ~/.docker

@@ -1,0 +1,4 @@
+---
+- name: atosatto.docker-swarm
+  src: https://github.com/atosatto/ansible-dockerswarm
+  version: origin/master

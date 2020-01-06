@@ -1,0 +1,21 @@
+---
+- name: Secure Docker Swarm - local
+  hosts: localhost
+  gather_facts: no
+  connection: local
+
+  roles:
+    - role: secure-docker-ca-client
+      tags:
+        - create
+        - configure
+
+- name: Secure Docker Swarm - remote
+  hosts: all
+  become: yes
+
+  roles:
+    - role: secure-docker-server
+      tags:
+        - create
+        - configure

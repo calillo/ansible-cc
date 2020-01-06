@@ -1,0 +1,15 @@
+---
+- name: Clean pki folder
+  hosts: localhost
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Clean pki folder
+      file:
+        path: pki
+        state: absent
+    - name: Creare pki folder
+      file:
+        path: pki
+        state: directory

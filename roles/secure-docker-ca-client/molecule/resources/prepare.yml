@@ -1,0 +1,15 @@
+---
+- name: Prepare the test targets
+  hosts: all
+  tasks:
+    - name: Make sure openssl is available on Debian/Ubuntu.
+      package:
+        name: openssl
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Make sure openssl is available on RedHat/CentOS.
+      package:
+        name: openssl
+        state: present
+      when: ansible_os_family == 'RedHat'

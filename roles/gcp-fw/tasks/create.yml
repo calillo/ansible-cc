@@ -1,0 +1,30 @@
+---
+- name: create a firewall docker
+  gcp_compute_firewall:
+    name: default-allow-docker
+    allowed:
+    - ip_protocol: tcp
+      ports: ['2375','2376']
+    target_tags:
+      - docker
+    source_ranges: ['0.0.0.0/0']
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_cred_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: firewall-docker
+
+- name: create a firewall http
+  gcp_compute_firewall:
+    name: default-allow-http
+    allowed:
+    - ip_protocol: tcp
+      ports: ['80', '443']
+    target_tags:
+      - http
+    source_ranges: ['0.0.0.0/0']
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_cred_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"
+    state: present
+  register: firewall-http
