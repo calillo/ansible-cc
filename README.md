@@ -1,79 +1,129 @@
-ansible-cc
+# Ansible Code Challenge
 
-[![Build Status](https://travis-ci.com/calillo/ansible-cc?branch=master)](https://travis-ci.com/calillo/ansible-cc)
+[![Build Status](https://travis-ci.com/calillo/ansible-cc.svg?branch=master)](https://travis-ci.com/calillo/ansible-cc)
+[![GitHub tag](https://img.shields.io/github/tag/calillo/ansible-cc.svg)](https://github.com/calillo/ansible-cc/tags)
 
-## install
+Ansible playbook script:
+1. Provisioning two CentOS VMs on GCP
+2. Mount 40GB dedicate disk on VMs
+3. Install and configure Docker Swarm
+4. Secure Docker Swarm cluster with TLS
 
-sudo pip install ansible requests google-auth
+## Requirements
+- ansible
+- ansible-galaxy
 
-ssh-keygen -t rsa -b 4096 -C "ansible" -f ~/.ssh/ansible
-
-## ansible
-
-ansible-playbook -i inventories/dev playbooks/create_infra.yml -t create
-ansible-playbook -i inventories/dev playbooks/install_docker_swarm.yml -t create
-ansible-playbook -i inventories/dev playbooks/secure_docker_swarm.yml -t create
-
-ansible-playbook -i inventories/dev site.yml -t create
-ansible-playbook -i inventories/dev site.yml -t configure
-ansible-playbook -i inventories/dev site.yml -t delete
-
-## inventory
-
-ansible-inventory -i inventories/dev --graph
-ansible-inventory -i inventories/dev --list --yaml
-ansible -i inventories/dev all -m ping
-
-# galaxy
-
+## Dependencies
+```bash
+pip install -r ansible-requirements.txt
 ansible-galaxy install -r roles/requirements.yml
+```
 
-# secure
+## Configuration
+`inventories/dev/group_vars/all.yml`
+```yaml
+# number of manager nodes
+num_manager: 1
+# number of worker nodes
+num_worker: 1
+# gcp region, zone and vm type
+zone: us-central1-a
+region: us-central1
+machine_type: f1-micro
+# dedicated docker disk partition size
+size_gb: 40
 
-openssl genrsa -out ca-key.pem 4096
-openssl req -x509 -new -nodes -key ca-key.pem -days 10000 -out ca.pem -subj '/CN=Docker CA'
+# path to local pki folder where ansible creare CA, client and server keys/certificates
+pki_path: ~/github/ansible-cc/pki
+# path to local docker TLS client folder
+docker_client_certs_path: ~/.docker
+# path to remote docker TLS server folder
+docker_server_certs_path: /etc/docker/ssl
+```
 
-openssl genrsa -out client-key.pem 2048
-openssl req -new -key client-key.pem -out client-cert.csr -subj '/CN=docker-client' -config client.cnf
-openssl x509 -req -in client-cert.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out client-cert.pem -days 365 -extensions v3_req -extfile client.cnf
+### GCP
+Remeber to create and set your GCP json service account file for your project inside both files:
+- `inventories/dev/group_vars/all.yml`
+```yaml
+gcp_project: <gcp_projcect_name>
+gcp_cred_kind: serviceaccount
+gcp_cred_file: <path_to_json_service_account_file>
+```
+- `inventories/dev/gcp.yml`
+```yaml
+projects:
+  - <gcp_projcect_name>
+...
+auth_kind: serviceaccount
+service_account_file: <path_to_json_service_account_file>
+```
 
-openssl genrsa -out manager1-key.pem 2048
-openssl req -new -key manager1-key.pem -out manager1-cert.csr -subj '/CN=docker-server' -config manager1.cnf
-openssl x509 -req -in manager1-cert.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out manager1-cert.pem -days 365 -extensions v3_req -extfile manager1.cnf
-
-openssl genrsa -out worker1-key.pem 2048
-openssl req -new -key worker1-key.pem -out worker1-cert.csr -subj '/CN=docker-server' -config worker1.cnf
-openssl x509 -req -in worker1-cert.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out worker1-cert.pem -days 365 -extensions v3_req -extfile worker1.cnf
-
-{
-    "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"],
-    "tlscacert": "/etc/docker/ssl/ca.pem",
-    "tlscert": "/etc/docker/ssl/cert.pem",
-    "tlskey": "/etc/docker/ssl/key.pem",
-    "tlsverify": true
-}
-
-export DOCKER_HOST=tcp://34.70.109.143:2376
-export DOCKER_TLS_VERIFY=1
-export DOCKER_CERT_PATH=~/github/ansible-cc/pki/client
+## Run
+### Create and configure infrastructure
+```bash
+ansible-playbook -i inventories/dev site.yml -t create
+```
+### Configure/Reconfigure infrastructure
+```bash
+ansible-playbook -i inventories/dev site.yml -t configure
+```
+### Delete infrastructure
+```bash
+ansible-playbook -i inventories/dev site.yml -t delete
+```
 
 ## Docker Swarm
+Connecto to Docker using TLS
+```bash
+export DOCKER_HOST=tcp://<ip-master-node>:2376
+export DOCKER_TLS_VERIFY=1
 
-docker stack deploy --compose-file docker-compose.yml app1
+docker info
+```
+> Optional: if you don't use default `~./docker` folder
+> ```bash
+> export DOCKER_CERT_PATH=<your_certs_path_folder>
+> ```
+
+### Deploy sample application
+```bash
+docker stack deploy --compose-file deploy/docker-compose.yml app1
 docker service ls
 docker stack ps app1
+```
 
-## Molecule
+## Testing
+Developed roles tests are performed by Molecule using the Docker driver.
+```bash
+cd roles/secure-docker-ca-client
+molecule test --all
+```
 
-pytest -v molecule/default/tests/test_default.py --hosts='ansible://localhost'
-
-    # image: fiercely/centos7:systemd
-    # privileged: true
-    # pre_build_image: true
-    # volume_mounts:
-    #   - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
-    # command: "/usr/sbin/init"
+```bash
+cd roles/secure-docker-server
+molecule test --all
+```
 
 ## TODO
 - provisiong with terraform
 - set ansible ssh pub key on provisioning
+- testing ci with tox
+
+## Note
+
+### Ansible
+Create ansible key
+```bash
+ssh-keygen -t rsa -b 4096 -C "ansible" -f ~/.ssh/ansible
+```
+#### Inventory
+```bash
+ansible-inventory -i inventories/dev --graph
+ansible-inventory -i inventories/dev --list --yaml
+ansible -i inventories/dev all -m ping
+```
+
+### Molecule
+```bash
+pytest -v molecule/default/tests/test_default.py --hosts='ansible://localhost'
+```
